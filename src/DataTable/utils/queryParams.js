@@ -72,8 +72,8 @@ function getFieldsMappedByCCDisplayName(schema) {
 
 function orderEntitiesLocal(orderArray, entities, schema, ownProps) {
   if (orderArray && orderArray.length) {
-    let orderFuncs = [];
-    let ascOrDescArray = [];
+    const orderFuncs = [];
+    const ascOrDescArray = [];
     orderArray.forEach(order => {
       const ccDisplayName = order.replace(/^-/gi, "");
       const ccFields = getFieldsMappedByCCDisplayName(schema);
@@ -194,11 +194,7 @@ function getEntitiesForGivenFilter(entities, filter, ccFields, ownProps) {
   const { filterOn, filterValue, selectedFilter } = filter;
   const field = ccFields[filterOn];
   const { path, getValueToFilterOn } = field;
-  const subFilter = getSubFilter(
-    false,
-    selectedFilter,
-    field.type === "number" ? Number(filterValue) : filterValue
-  );
+  const subFilter = getSubFilter(false, selectedFilter, filterValue);
   entities = entities.filter(entity => {
     const fieldVal = getValueToFilterOn
       ? getValueToFilterOn(entity, ownProps)
@@ -470,7 +466,7 @@ export function makeDataTableHandlers({
 }) {
   //all of these actions have currentParams bound to them as their last arg in withTableParams
   function setSearchTerm(searchTerm, currentParams) {
-    let newParams = {
+    const newParams = {
       ...currentParams,
       page: undefined, //set page undefined to return the table to page 1
       searchTerm: searchTerm === defaults.searchTerm ? undefined : searchTerm
@@ -486,7 +482,7 @@ export function makeDataTableHandlers({
       "filterOn"
     );
 
-    let newParams = {
+    const newParams = {
       ...currentParams,
       page: undefined, //set page undefined to return the table to page 1
       filters
@@ -500,7 +496,7 @@ export function makeDataTableHandlers({
           return filter.filterOn !== filterOn;
         })
       : undefined;
-    let newParams = {
+    const newParams = {
       ...currentParams,
       filters
     };
@@ -519,7 +515,7 @@ export function makeDataTableHandlers({
     updateSearch();
   }
   function setPageSize(pageSize, currentParams) {
-    let newParams = {
+    const newParams = {
       ...currentParams,
       pageSize: pageSize === defaults.pageSize ? undefined : pageSize,
       page: undefined //set page undefined to return the table to page 1
@@ -546,14 +542,14 @@ export function makeDataTableHandlers({
         newOrder = [order];
       }
     }
-    let newParams = {
+    const newParams = {
       ...currentParams,
       order: newOrder
     };
     setNewParams(newParams);
   }
   function setPage(page, currentParams) {
-    let newParams = {
+    const newParams = {
       ...currentParams,
       page: page === defaults.page ? undefined : page
     };
@@ -627,7 +623,7 @@ export function getQueryParams({
       delete currentParams[key]; //we want to use the default value if any of these are undefined
     }
   });
-  let tableQueryParams = {
+  const tableQueryParams = {
     ...defaults,
     ...currentParams
   };
@@ -641,7 +637,7 @@ export function getQueryParams({
   }
   if (pageSize !== undefined && !doNotCoercePageSize) {
     //pageSize might come in as an unexpected number so we coerce it to be one of the nums in our pageSizes array
-    let closest = clone(window.tgPageSizes || defaultPageSizes).sort(
+    const closest = clone(window.tgPageSizes || defaultPageSizes).sort(
       (a, b) => Math.abs(pageSize - a) - Math.abs(pageSize - b)
     )[0];
     pageSize = closest;
@@ -670,7 +666,7 @@ export function getQueryParams({
 
     const entitiesAcrossPages = newEntities;
 
-    let newEntityCount = newEntities.length;
+    const newEntityCount = newEntities.length;
     //calculate the sorted, filtered, paged entities for the local table
     if (!isInfinite && !ownProps.controlled_pageSize) {
       const offset = (page - 1) * pageSize;
@@ -696,7 +692,7 @@ export function getQueryParams({
     }
 
     const { model } = schema;
-    let qb = new QueryBuilder(model);
+    const qb = new QueryBuilder(model);
     // qb = qb.filter('user')
     // qb = qb.whereAny({
     //   userStatus: qb.related('userStatus').whereAny({
@@ -717,7 +713,7 @@ export function getQueryParams({
         const schemaForField = ccFields[ccDisplayName];
         if (schemaForField) {
           const { path } = schemaForField;
-          let reversed = ccDisplayName !== orderVal;
+          const reversed = ccDisplayName !== orderVal;
           const prefix = reversed ? "-" : "";
           graphqlQueryParams.sort = [
             ...(graphqlQueryParams.sort || []),
@@ -736,7 +732,7 @@ export function getQueryParams({
 
     let errorParsingUrlString;
 
-    let additionalFilterToUse = additionalFilter(qb, currentParams);
+    const additionalFilterToUse = additionalFilter(qb, currentParams);
     let additionalOrFilterToUse = additionalOrFilter(qb, currentParams);
     if (additionalOrFilterToUse && additionalOrFilterToUse.ignoreSearchTerm) {
       searchTerm = "";

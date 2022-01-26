@@ -12,7 +12,7 @@ import Dropzone from "react-dropzone";
 // import { first } from "lodash";
 import classnames from "classnames";
 import { some, forEach, map, every, compact, findIndex, merge } from "lodash";
-import shortid from "shortid";
+import { nanoid } from "nanoid";
 import ItemUpload from "./itemUpload";
 
 function noop() {}
@@ -267,7 +267,7 @@ class Uploader extends Component {
                 acceptedFiles.forEach(file => {
                   file.loading = true;
                   if (!file.id) {
-                    file.id = shortid();
+                    file.id = nanoid();
                   }
                 });
                 if (readBeforeUpload) {
